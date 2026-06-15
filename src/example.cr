@@ -4,6 +4,8 @@ Log.setup_from_env(backend: Log::IOBackend.new(File.new(File.join(File.dirname(P
 
 require "./accomplice"
 
+Accomplice::Windows::Service.shutdown_timeout = 10.seconds
+
 running = true
 at_exit do |status, exception|
   running = false

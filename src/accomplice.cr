@@ -12,7 +12,15 @@ module Accomplice
 
       # Sets how long to wait for a graceful shutdown to complete before
       # stopping the service and forcibly exiting the process
-      def self.shutdown_timeout=(@@shutdown_timeout : Time::Span)
+      def self.shutdown_timeout=(shutdown_timeout : Time::Span)
+        raise ArgumentError.new("shutdown_timeout must be greater than zero: #{shutdown_timeout}") unless shutdown_timeout > Time::Span.zero
+        @@shutdown_timeout = shutdown_timeout
+      end
+
+      # Returns how long to wait before forcibly exiting the program on
+      # service shutdown
+      def self.shutdown_timeout : Time::Span
+        @@shutdown_timeout
       end
 
       # Only include the Windows Service-related code on the Windows platform
@@ -47,7 +55,9 @@ module Accomplice
             # configured timeout period, otherwise stop the service and
             # forcibly exit the process
             Fiber::ExecutionContext::Isolated.new("WINDOWS SERVICE SHUTDOWN") do
-              sleep @@shutdown_timeout
+              if shutdown_timeout = @@shutdown_timeout
+                sleep shutdown_timeout
+              end
               shutdown(1)
               Process.exit
             end
@@ -157,8 +167,8 @@ module Accomplice
               service_status.service_specific_exit_code = 0
               service_status.check_point = 0
 
-              if service_status.current_state == LibWindowsService::SERVICE_STATUS_CURRENT_STATE::SERVICE_STOP_PENDING
-                service_status.wait_hint = @@shutdown_timeout.total_milliseconds.to_i
+              if service_status.current_state == LibWindowsService::SERVICE_STATUS_CURRENT_STATE::SERVICE_STOP_PENDING && (shutdown_timeout = @@shutdown_timeout)
+                service_status.wait_hint = shutdown_timeout.total_milliseconds.to_i
               else
                 service_status.wait_hint = DEFAULT_WAIT_HINT.total_milliseconds.to_i
               end
