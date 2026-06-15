@@ -1,26 +1,26 @@
 # Accomplice
 
-Allows any Crystal language program to easily run as a Windows Service
-with minimal change, while continuing to support running as a console
-application also.
+Allows any Crystal language program to easily run as a Windows Service with
+minimal change, while continuing to support running as a console application
+also.
 
-Handles the Windows Service API for you. Adding Windows Service
-support is as simple as adding the dependency on Accomplice to your
-`shard.yml` file, and including a `require "accomplice"` line in your
-program.
+Handles the Windows Service API for you. Adding Windows Service support is as
+simple as adding the dependency on Accomplice to your `shard.yml` file, and 
+including a `require "accomplice"` line in your program before it does any 
+meaningful work.
 
-Should you wish to add support for graceful shutdown, doing so
-requires minimal additional effort, either:
+Should you wish to add support for graceful shutdown, doing so requires 
+minimal additional effort, either:
 * Add `at_exit` handlers to perform graceful shutdown tasks, or
 * Use `Process.on_terminate` to register your own interrupt signal
   handler to perform graceful shutdown tasks and then `exit`.
 
-By default Accomplice waits 5 seconds for your program to gracefully
-shutdown, after which it forcibly stops the process.
+By default Accomplice waits 5 seconds for your program to gracefully shutdown,
+after which it forcibly stops the process.
 
-You can also continue to run your program manually via the console
-after the above changes, without interference from Accomplice or the
-Windows Service API.
+You can also continue to run your program manually via the console after the
+above changes, without interference from Accomplice or the Windows Service
+API.
 
 ## Usage
 
@@ -34,8 +34,8 @@ Windows Service API.
 
 2. Run `shards install`
 
-3. Require `accomplice` in your program, and then optionally include
-   logic to gracefully shutdown your program when interrupted:
+3. Require `accomplice` in your program, and then optionally include logic to
+   gracefully shutdown your program when interrupted:
 
 ```crystal
 # Accomplice handles the Windows Service API for you, so that your
@@ -79,7 +79,6 @@ loop do
   # ...do stuff...
   sleep 1.second
 end
-
 ```
 
 4. Compile: `shards build -Dpreview_mt -Dexecution_context`
@@ -88,8 +87,7 @@ end
    * the service dispatcher thread, and
    * at least one other thread to run the actual service logic.
 
-   This requires compiling your Crystal program with the following
-   flags:
+   This requires compiling your Crystal program with the following flags:
    * `-Dpreview_mt` to enable multithreading, and
    * `-Dexecution_context` to enable the new execution contexts.
 

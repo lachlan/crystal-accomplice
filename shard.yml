@@ -1,10 +1,9 @@
 name: accomplice
-version: 0.1.0
+version: 0.1.1
 
 description: >
-  Allows any Crystal language program to easily run as a Windows
-  Service with minimal change, and continue to support running as a
-  console application.
+  Allows any Crystal language program to easily run as a Windows Service with
+  minimal change, and continue to support running as a console application.
 
 authors:
   - Lachlan Dowding <lachlan@permafrost.space>
@@ -13,6 +12,6 @@ targets:
   example:
     main: src/example.cr
 
-crystal: '>= 1.20.0'
+crystal: ">= 1.20.0"
 
 license: MIT
