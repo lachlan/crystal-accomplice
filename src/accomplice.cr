@@ -64,6 +64,11 @@ module Accomplice
           end
         end
 
+        # Allocates a console to the process if required
+        def self.allocate_console_if_required : Nil
+          @@console_allocated = LibWindowsService.AllocConsole != 0
+        end
+
         # Performs shutdown tasks before stopping the Windows Service
         protected def self.shutdown(status : Int32, exception : Exception? = nil) : Nil
           LibWindowsService.FreeConsole if @@console_allocated
@@ -90,7 +95,6 @@ module Accomplice
             raise "WINDOWS SERVICE MAIN CONTROL HANDLER REGISTRATION FAILED: `LibWindowsService.RegisterServiceCtrlHandlerA(...)` => #{WinError.value.to_i} #{WinError.value.to_s}: #{WinError.value.message}" if return_value == 0
 
             @@status_handle = return_value
-            @@console_allocated = LibWindowsService.AllocConsole != 0
 
             # stop the windows service when the process exits
             at_exit do |status, exception|
@@ -295,6 +299,13 @@ module Accomplice
 end
 
 {% if flag?(:win32) %}
+  # When running in a Windows service context we need to manually allocate a
+  # console before any other code executes to support STDIO without crashing
+  def Crystal.main_user_code(argc : Int32, argv : UInt8**)
+    Accomplice::Windows::Service.allocate_console_if_required
+    previous_def
+  end
+
   # Only if program is running on Windows and it was started as a Windows
   # Service then register with the Windows Service Manager, otherwise do
   # nothing and let the program run as a console application as per normal

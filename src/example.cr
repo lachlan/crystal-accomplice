@@ -1,8 +1,7 @@
 require "log"
+require "./accomplice"
 
 Log.setup_from_env(backend: Log::IOBackend.new(File.new(File.join(File.dirname(Process.executable_path.not_nil!), File.basename(Process.executable_path.not_nil!) + ".log"), "a")))
-
-require "./accomplice"
 
 Accomplice::Windows::Service.shutdown_timeout = 10.seconds
 
