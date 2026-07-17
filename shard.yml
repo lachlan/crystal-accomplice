@@ -1,5 +1,5 @@
 name: accomplice
-version: 0.1.3
+version: 0.1.4
 
 description: >
   Allows any Crystal language program to easily run as a Windows Service with
@@ -12,6 +12,6 @@ targets:
   example:
     main: src/example.cr
 
-crystal: ">= 1.20.0"
+crystal: ">= 1.21.0"
 
 license: MIT

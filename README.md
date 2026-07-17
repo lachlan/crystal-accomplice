@@ -22,6 +22,11 @@ You can also continue to run your program manually via the console after the
 above changes, without interference from Accomplice or the Windows Service
 API.
 
+Note: a Windows Service necessarily requires at least two (2) threads, and 
+this is accomplished using Crystal execution contexts as follows:
+* the service dispatcher thread, started in an isolated execution context, and
+* at least one other thread to run the actual service logic, the main thread.
+
 ## Usage
 
 1. Add the dependency to your `shard.yml`:
@@ -81,15 +86,7 @@ loop do
 end
 ```
 
-4. Compile: `shards build -Dpreview_mt -Dexecution_context`
-
-   A Windows Service necessarily requires at least two (2) threads:
-   * the service dispatcher thread, and
-   * at least one other thread to run the actual service logic.
-
-   This requires compiling your Crystal program with the following flags:
-   * `-Dpreview_mt` to enable multithreading, and
-   * `-Dexecution_context` to enable the new execution contexts.
+4. Compile: `shards build`
 
 5. Create Windows service (note: these commands need to be run as an
    Administrator):
