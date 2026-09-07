@@ -16,7 +16,14 @@ minimal additional effort, either:
   handler to perform graceful shutdown tasks and then `exit`.
 
 By default Accomplice waits 5 seconds for your program to gracefully shutdown,
-after which it forcibly stops the process.
+after which it forcibly stops the process. This timeout can be changed if 
+required as follow:
+
+```crystal
+# Change the shutdown timeout from the default 5 seconds 
+# to 30 seconds
+Accomplice::Windows::Service.shutdown_timeout = 30.seconds
+```
 
 You can also continue to run your program manually via the console after the
 above changes, without interference from Accomplice or the Windows Service
